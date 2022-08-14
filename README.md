@@ -1,1 +1,1 @@
-# autoforecast
+# auto-forecast
