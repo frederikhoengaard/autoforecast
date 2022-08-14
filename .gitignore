@@ -9,6 +9,7 @@ __pycache__/
 #
 .idea
 .DS_Store
+autoforecast-venv
 
 # Distribution / packaging
 .Python

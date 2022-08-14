@@ -56,3 +56,13 @@ def featuremaker(df: DataFrame, target: str, lags=365) -> DataFrame:
     df = pd.get_dummies(df, columns=['day', 'month', 'weekday'])
 
     return df
+
+
+def get_inverse_weights(errors: list) -> list:
+    errors = [abs(error) for error in errors]
+    total_errors = sum(errors)
+    weights = [num/total_errors for num in errors]
+    weights_reciprocal = [1/w for w in weights]
+    total_reciprocals = sum(weights_reciprocal)
+
+    return [num/total_reciprocals for num in weights_reciprocal]

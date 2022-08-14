@@ -4,7 +4,7 @@ from utils import load_dataset
 
 
 def load_denmark(resample=None) -> pd.DataFrame:
-    df = load_dataset('data/dk.csv')
+    df = load_dataset('sample_data/dk.csv')
     if resample is not None:
         if resample.lower() == 'daily':
             resampled_df = df.resample('D').sum()
@@ -18,7 +18,7 @@ def load_denmark(resample=None) -> pd.DataFrame:
 
 
 def load_finland(resample=None) -> pd.DataFrame:
-    df = load_dataset('data/fi.csv')
+    df = load_dataset('sample_data/fi.csv')
     if resample is not None:
         if resample.lower() == 'daily':
             resampled_df = df.resample('D').sum()
@@ -28,7 +28,7 @@ def load_finland(resample=None) -> pd.DataFrame:
 
 
 def load_germany(resample=None) -> pd.DataFrame:
-    df = load_dataset('data/de.csv')
+    df = load_dataset('sample_data/de.csv')
     if resample is not None:
         if resample.lower() == 'daily':
             resampled_df = df.resample('D').sum()
@@ -38,7 +38,7 @@ def load_germany(resample=None) -> pd.DataFrame:
 
 
 def load_norway(resample=None) -> pd.DataFrame:
-    df = load_dataset('data/no.csv')
+    df = load_dataset('sample_data/no.csv')
     if resample is not None:
         if resample.lower() == 'daily':
             resampled_df = df.resample('D').sum()
@@ -48,7 +48,7 @@ def load_norway(resample=None) -> pd.DataFrame:
 
 
 def load_sweden(resample=None) -> pd.DataFrame:
-    df = load_dataset('data/se.csv')
+    df = load_dataset('sample_data/se.csv')
     if resample is not None:
         if resample.lower() == 'daily':
             resampled_df = df.resample('D').sum()
