@@ -17,7 +17,7 @@ class AutoModel:
         - recursive_forecast()
     """
 
-    def __init__(self, time_allowance=3600):
+    def __init__(self, time_allowance=3600, verbose=0):
         self.param_grid = {
             'max_depth': [3, 4, 5, 6, 7, 8, 9, 10],
             'learning_rate': [0.001, 0.01, 0.1, 0.2, 0.3],
@@ -37,6 +37,7 @@ class AutoModel:
         self.ensemble = None
         self.ensemble_weights = None
         self._is_fitted = False
+        self._verbose = verbose
 
     def _set_model_weights(self, models: List[Tuple]) -> List:
         """
@@ -74,16 +75,17 @@ class AutoModel:
         :n_folds: Number of cross-validation folds to make
         :returns: A RandomizedSearchCV object containing the optimized regressor
         """
-        xgbtuned = XGBRegressor()
+        xgbtuned = XGBRegressor(verbosity=self._verbose)
 
         tscv = TimeSeriesSplit(n_splits=n_folds)  # time series cross validation split
         xgbtunedreg = RandomizedSearchCV(
             xgbtuned,
             param_distributions=params,
             scoring='neg_mean_squared_error',
-            n_iter=25,
+            n_iter=20,
             n_jobs=-1,
             cv=tscv,
+            verbose=self._verbose,
         )
         xgbtunedreg.fit(features, labels)
         return xgbtunedreg
@@ -121,7 +123,7 @@ class AutoModel:
 
         :param data: DataFrame of both features and labels
         :param target: name of target column/variable
-        :holdout_size: int of number of observations to set aside from data
+        :param holdout_size: int of number of observations to set aside from data
             for holdout
         """
         self.data = featuremaker(data, target)
@@ -132,9 +134,9 @@ class AutoModel:
         else:
             self._train = self.data
 
-        train_X, train_y = self._train.iloc[:,1:], self._train.iloc[:, :1]
+        train_x, train_y = self._train.iloc[:, 1:], self._train.iloc[:, :1]
 
-        self.ensemble = self._fit_ensemble(train_X, train_y, self.param_grid, n_regressors=5)
+        self.ensemble = self._fit_ensemble(train_x, train_y, self.param_grid, n_regressors=5)
         self.ensemble_weights = self._set_model_weights(self.ensemble)
 
         self._is_fitted = True
@@ -150,7 +152,7 @@ class AutoModel:
 
         return self._ensemble_predict(self.ensemble_weights, features)
 
-    def recursive_forecast(self, horizon: int, verbose=0) -> Tuple[DataFrame, DataFrame]:
+    def recursive_forecast(self, horizon: int) -> Tuple[DataFrame, DataFrame]:
         """
         This method returns recursive forecasts from the predictor i.e. a sequence of
         predictions where each succesive predictions is based on lag values of previous
@@ -175,7 +177,7 @@ class AutoModel:
 
             results["date"].append(next_date)
             results["prediction"].append(prediction)
-            if verbose > 0:
+            if self._verbose > 2:
                 print(f"Predicted {prediction} for time {next_date}")
 
         results = pd.DataFrame(results, index=results["date"]).iloc[:, 1:]
