@@ -17,8 +17,7 @@ class AutoModel:
         - recursive_forecast()
     """
 
-
-    def __init__(self):
+    def __init__(self, time_allowance=3600):
         self.param_grid = {
             'max_depth': [3, 4, 5, 6, 7, 8, 9, 10],
             'learning_rate': [0.001, 0.01, 0.1, 0.2, 0.3],
@@ -32,6 +31,8 @@ class AutoModel:
         self.data = None
         self._train = None
         self.target = None
+        self.time_allowance = time_allowance
+        self.time_left = time_allowance
         self.holdout = None
         self.ensemble = None
         self.ensemble_weights = None
@@ -87,7 +88,7 @@ class AutoModel:
         xgbtunedreg.fit(features, labels)
         return xgbtunedreg
 
-    def _fit_ensemble(self, features, labels, param_grid: dict, n_regressors=5) -> List[Tuple]:
+    def _fit_ensemble(self, features, labels, param_grid: dict, n_regressors=1) -> List[Tuple]:
         """
         Private method to fit a number of regressors
 
