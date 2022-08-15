@@ -26,7 +26,7 @@ class AutoModel:
             'colsample_bylevel': [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
             'min_child_weight': [0.5, 1.0, 3.0, 5.0, 7.0, 10.0],
             'gamma': [0, 0.25, 0.5, 1.0],
-            'n_estimators': [100, 200, 300]
+            'n_estimators': [100, 200, 300, 500]
         }
         self.data = None
         self._train = None
@@ -82,7 +82,7 @@ class AutoModel:
             xgbtuned,
             param_distributions=params,
             scoring='neg_mean_squared_error',
-            n_iter=20,
+            n_iter=25,
             n_jobs=-1,
             cv=tscv,
             verbose=self._verbose,
@@ -90,7 +90,7 @@ class AutoModel:
         xgbtunedreg.fit(features, labels)
         return xgbtunedreg
 
-    def _fit_ensemble(self, features, labels, param_grid: dict, n_regressors=1) -> List[Tuple]:
+    def _fit_ensemble(self, features, labels, param_grid: dict, n_regressors=5) -> List[Tuple]:
         """
         Private method to fit a number of regressors
 
