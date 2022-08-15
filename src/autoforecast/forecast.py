@@ -169,11 +169,11 @@ class AutoModel:
         train_data = self._train
 
         for i in range(horizon):
-            X = make_features_for_next(train_data, self.target)
-            next_date = X.index[0]
-            prediction = float(self.predict(X))
-            X[self.target] = prediction
-            train_data = pd.concat([train_data, X])
+            x = make_features_for_next(train_data, self.target)
+            next_date = x.index[0]
+            prediction = float(self.predict(x))
+            x[self.target] = prediction
+            train_data = pd.concat([train_data, x])
 
             results["date"].append(next_date)
             results["prediction"].append(prediction)
