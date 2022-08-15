@@ -12,7 +12,7 @@ def predict_danish_power_consumption_2015(recursive=False):
 
     am = AutoModel(verbose=2)
     print("fitting model")
-    am.fit(dk_daily, "consumption_MW")
+    am.fit(dk_daily, "consumption_MW", holdout_size=365)
 
     y_pred = am.recursive_forecast(365)
 
